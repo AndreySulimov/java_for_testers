@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
+    <output-test url="file://$MODULE_DIR$/../../addressbook-web-tests/out/test/classes" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../addressbook-web-tests/src/test" />
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="addressbook-web-tests.main" />
+    <orderEntry type="library" name="Gradle: org.testng:testng:7.1.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.beust:jcommander:1.72" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.inject:guice:no_aop:4.1.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.yaml:snakeyaml:1.21" level="project" />
+    <orderEntry type="library" name="Gradle: javax.inject:javax.inject:1" level="project" />
+    <orderEntry type="library" name="Gradle: aopalliance:aopalliance:1.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.guava:guava:19.0" level="project" />
+  </component>
+  <component name="TestModuleProperties" production-module="addressbook-web-tests.main" />
+</module>
