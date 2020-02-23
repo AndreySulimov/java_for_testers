@@ -4,10 +4,8 @@
     <bytecodeTargetLevel>
       <module name="addressbook-web-tests.main" target="1.8" />
       <module name="addressbook-web-tests.test" target="1.8" />
-      <module name="java_for_testers.addressbook-web-tests.main" target="1.8" />
-      <module name="java_for_testers.addressbook-web-tests.test" target="1.8" />
-      <module name="sandbox.main" target="1.8" />
-      <module name="sandbox.test" target="1.8" />
+      <module name="GitHub.java_for_testers.addressbook-web-tests.main" target="1.8" />
+      <module name="GitHub.java_for_testers.addressbook-web-tests.test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
