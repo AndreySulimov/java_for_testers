@@ -1,15 +1,17 @@
 package ru.jft.addressbook.appmanager;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import ru.jft.addressbook.model.ContactData;
 
 public class ContactHelper extends HelperBase {
 
-  public ContactHelper(WebDriver wd) {
-    super(wd);
+  public ApplicationManager app;
+
+  public ContactHelper(ApplicationManager applicationManager) {
+    super(applicationManager.wd);
+    this.app = applicationManager;
   }
 
   public void submitContactCreation() {
@@ -48,8 +50,10 @@ public class ContactHelper extends HelperBase {
   }
 
   public void createContact(ContactData contact, boolean creation) {
+    app.getNavigationHelper().goToContactPage();
     fillContactForm(contact, creation);
     submitContactCreation();
+    app.getNavigationHelper().returnToHomePage();
   }
 
   public boolean isThereAContact() {

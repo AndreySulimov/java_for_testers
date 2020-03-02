@@ -35,9 +35,9 @@ public class ApplicationManager {
     wd.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
     wd.get("http://localhost/addressbook/");
     sessionHelper = new SessionHelper(wd);
-    navigationHelper = new NavigationHelper(wd);
+    navigationHelper = new NavigationHelper(this);
     groupHelper = new GroupHelper(wd);
-    contactHelper = new ContactHelper(wd);
+    contactHelper = new ContactHelper(this);
     sessionHelper.login("admin", "secret");
   }
 

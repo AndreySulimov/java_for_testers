@@ -1,12 +1,14 @@
 package ru.jft.addressbook.appmanager;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 
 public class NavigationHelper extends HelperBase {
 
-  public NavigationHelper(WebDriver wd) {
-    super(wd);
+  public ApplicationManager app;
+
+  public NavigationHelper(ApplicationManager applicationManager) {
+    super(applicationManager.wd);
+    this.app = applicationManager;
   }
 
   public void gotoGroupPage() {
