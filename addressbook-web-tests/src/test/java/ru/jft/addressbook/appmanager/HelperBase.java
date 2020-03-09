@@ -27,8 +27,9 @@ public class HelperBase {
     }
   }
 
-  public void closeAlert() {
+  public void confirmDeletion() {
     wd.switchTo().alert().accept();
+    wd.findElement(By.cssSelector("div.msgbox"));
   }
 
   public boolean isElementPresent(By locator) {
