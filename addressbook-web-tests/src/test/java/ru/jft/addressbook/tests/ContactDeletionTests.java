@@ -25,8 +25,8 @@ public class ContactDeletionTests extends TestBase {
     Contacts before = app.contact().all(); // сохраняем список контактов до удаления
     ContactData deletedContact = before.iterator().next(); // выбираем удаляемый контакт (рандомно)
     app.contact().delete(deletedContact); // удаляем выбранный контакт
+    assertThat(app.contact().count(), equalTo(before.size() - 1)); // сравниваем размеры списков
     Contacts after = app.contact().all(); // сохраняем список контактов после удаления
-    assertEquals(after.size(), before.size() - 1); // сравниваем размеры списков
     assertThat(after, equalTo(before.without(deletedContact))); // проверяем, что контакт удалился
   }
 }

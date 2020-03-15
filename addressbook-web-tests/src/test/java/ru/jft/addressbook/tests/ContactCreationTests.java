@@ -15,12 +15,25 @@ public class ContactCreationTests extends TestBase {
     app.goTo().contactPage(); // переходим на страницу добавления контактов
     // создаем локальную переменную contact и передаем в конструктор значения
     ContactData contact = new ContactData()
-            .withFirstname("Андрей3").withLastname("Сулимов3").withAddress("Злынка2").withTelephone("89001234567").withEmail("test2@mail.ru").withGroup("Test2");
+            .withFirstname("Андрей").withLastname("Сулимов").withAddress("Злынка").withTelephone("89001234567").withEmail("test@mail.ru").withGroup("Test2");
     app.contact().create(contact, true); // создаем контакт с указанными параметрами
     app.goTo().returnToHomePage(); // возвращаемся на главную страницу
+    assertThat(app.contact().count(), equalTo(before.size() + 1)); // сравниваем размеры списков
     Contacts after = app.contact().all(); // сохраняем список контактов после создания нового
-    assertThat(after.size(), equalTo(before.size() + 1)); // сравниваем размеры списков
     assertThat(after, equalTo(
             before.withAdded(contact.withId(after.stream().mapToInt((c) -> c.getId()).max().getAsInt())))); // проверяем, что контакт создался
+  }
+
+  @Test
+  public void testBadContactCreation() throws Exception { // негативный тест - недопустимый сивол в firstname
+    Contacts before = app.contact().all();
+    app.goTo().contactPage();
+    ContactData contact = new ContactData()
+            .withFirstname("Андрей'").withLastname("Сулимов").withAddress("Злынка").withTelephone("89001234567").withEmail("test@mail.ru").withGroup("Test2");
+    app.contact().create(contact, true);
+    app.goTo().returnToHomePage();
+    assertThat(app.contact().count(), equalTo(before.size()));
+    Contacts after = app.contact().all();
+    assertThat(after, equalTo(before)); // проверяем, что контакт не создался
   }
 }

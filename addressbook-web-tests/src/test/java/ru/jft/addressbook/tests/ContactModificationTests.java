@@ -28,8 +28,8 @@ public class ContactModificationTests extends TestBase {
     ContactData contact = new ContactData()
             .withId(modifiedContact.getId()) /*задаем старый идентификатор*/.withFirstname("Андрей2").withLastname("Сулимов2").withAddress("Злынка2").withTelephone("89001234562").withEmail("test2@mail.ru").withGroup(null);
     app.contact().modify(contact); // модифицируем контакт
+    assertThat(app.contact().count(), equalTo(before.size())); // проверяем равенство размеров списков
     Contacts after = app.contact().all(); // сохраняем список контактов после модификации
-    assertEquals(after.size(), before.size()); // проверяем равенство размеров списков
     assertThat(after, equalTo(before.without(modifiedContact).withAdded(contact))); // проверяем, что контакт модифицировался
   }
 }
