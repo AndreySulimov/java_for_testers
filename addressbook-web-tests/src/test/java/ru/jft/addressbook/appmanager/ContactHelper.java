@@ -58,12 +58,14 @@ public class ContactHelper extends HelperBase {
     app.goTo().contactPage();
     fillContactForm(contact, creation);
     submitContactCreation();
+    contactCache = null;
     app.goTo().returnToHomePage();
   }
 
   public void delete(ContactData сontact) {
     selectContactById(сontact.getId());
     deleteSelectedContact();
+    contactCache = null;
     app.goTo().returnToHomePage();
   }
 
@@ -71,6 +73,7 @@ public class ContactHelper extends HelperBase {
     initContactModificationById(contact.getId());
     fillContactForm(contact, false);
     submitContactModification();
+    contactCache = null;
     app.goTo().returnToHomePage();
   }
 
@@ -82,8 +85,15 @@ public class ContactHelper extends HelperBase {
     return wd.findElements(By.name("selected[]")).size();
   }
 
+  private Contacts contactCache = null; // поле для кэша
+
   public Contacts all() {
-    Contacts contacts = new Contacts();
+    /* если кэш не пустой (не равен null),
+    то возвращается копия кэша */
+    if (contactCache != null) {
+      return new Contacts(contactCache);
+    }
+    contactCache = new Contacts();
     // находим элементы, соответствующие строкам таблицы
     List<WebElement> elements = wd.findElements(By.xpath("//tr[@name='entry']"));
     // проходимся циклом по строкам таблицы
@@ -100,8 +110,8 @@ public class ContactHelper extends HelperBase {
 
       // создаем объект и передаем в конструктор в качестве параметров извлеченные выше значения
       // добавляем созданный объект в список
-      contacts.add(new ContactData().withId(id).withFirstname(firstname).withLastname(lastname));
+      contactCache.add(new ContactData().withId(id).withFirstname(firstname).withLastname(lastname));
     }
-    return contacts;
+    return new Contacts(contactCache); // возвращаем копию кэша
   }
 }
