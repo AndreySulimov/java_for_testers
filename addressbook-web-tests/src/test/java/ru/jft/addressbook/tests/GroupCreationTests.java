@@ -1,23 +1,22 @@
 package ru.jft.addressbook.tests;
 
-import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.Test;
 import ru.jft.addressbook.model.GroupData;
+import ru.jft.addressbook.model.Groups;
 
-import java.util.Set;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class GroupCreationTests extends TestBase {
 
   @Test
   public void testGroupCreation() throws Exception {
     app.goTo().groupPage();
-    Set<GroupData> before = app.group().all();
+    Groups before = app.group().all();
     GroupData group = new GroupData().withName("Test2");
     app.group().create(group);
-    Set<GroupData> after = app.group().all();
-    Assert.assertEquals(after.size(), before.size() + 1);
+    Groups after = app.group().all();
 
-    group.withId(after.stream().max((o1, o2) -> Integer.compare(o1.getId(), o2.getId())).get().getId());
     /*вычисляем максимальный идентификатор:
     берем коллекцию, содержащую группы с уже известными идентификаторами,
     превращаем ее в поток
@@ -26,9 +25,8 @@ public class GroupCreationTests extends TestBase {
     ко всем элементам потока и каждый из них последовательно преобразуется в число.
     Затем вызываем метод max() для получения максимального из чисел и преобразуем результат в
     обычное целое число - getAsInt() - это и будет максимальный из идентификаторов*/
-    group.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt());
-
-    before.add(group);
-    Assert.assertEquals(before, after);
+    assertThat(after.size(), equalTo(before.size() + 1));
+    assertThat(after, equalTo(
+            before.withAdded(group.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt())))); // сравниваем множества before и after
   }
 }
