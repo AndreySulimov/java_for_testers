@@ -20,7 +20,7 @@ public class NavigationHelper extends HelperBase {
     click(By.linkText("groups"));
   }
 
-  public void goToContactPage() {
+  public void contactPage() {
     click(By.linkText("add new"));
   }
 

@@ -5,8 +5,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import ru.jft.addressbook.model.ContactData;
+import ru.jft.addressbook.model.Contacts;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ContactHelper extends HelperBase {
@@ -36,8 +36,8 @@ public class ContactHelper extends HelperBase {
     }
   }
 
-  public void selectContact(int index) {
-    wd.findElements(By.name("selected[]")).get(index).click();
+  public void selectContactById(int id) {
+    wd.findElement(By.cssSelector("input[value='" + id + "']")).click();
   }
 
   public void deleteSelectedContact() {
@@ -45,19 +45,33 @@ public class ContactHelper extends HelperBase {
     confirmDeletion();
   }
 
-  public void initContactModification(int index) {
-    wd.findElements(By.xpath("//img[@alt='Edit']")).get(index).click();
+  private void initContactModificationById(int id) {
+    wd.findElement(By.cssSelector("a[href='edit.php?id=" + id + "']")).click();
+
   }
 
   public void submitContactModification() {
     click(By.name("update"));
   }
 
-  public void createContact(ContactData contact, boolean creation) {
-    app.getNavigationHelper().goToContactPage();
+  public void create(ContactData contact, boolean creation) {
+    app.goTo().contactPage();
     fillContactForm(contact, creation);
     submitContactCreation();
-    app.getNavigationHelper().returnToHomePage();
+    app.goTo().returnToHomePage();
+  }
+
+  public void delete(ContactData сontact) {
+    selectContactById(сontact.getId());
+    deleteSelectedContact();
+    app.goTo().returnToHomePage();
+  }
+
+  public void modify(ContactData contact) {
+    initContactModificationById(contact.getId());
+    fillContactForm(contact, false);
+    submitContactModification();
+    app.goTo().returnToHomePage();
   }
 
   public boolean isThereAContact() {
@@ -68,8 +82,8 @@ public class ContactHelper extends HelperBase {
     return wd.findElements(By.name("selected[]")).size();
   }
 
-  public List<ContactData> getContactList() {
-    List<ContactData> contacts = new ArrayList<ContactData>();
+  public Contacts all() {
+    Contacts contacts = new Contacts();
     // находим элементы, соответствующие строкам таблицы
     List<WebElement> elements = wd.findElements(By.xpath("//tr[@name='entry']"));
     // проходимся циклом по строкам таблицы
@@ -85,8 +99,8 @@ public class ContactHelper extends HelperBase {
       int id = Integer.parseInt(cells.get(0).findElement(By.tagName("input")).getAttribute("value"));
 
       // создаем объект и передаем в конструктор в качестве параметров извлеченные выше значения
-      ContactData contact = new ContactData(id, firstname, lastname, null, null, null, null);
-      contacts.add(contact); // добавляем созданный объект в список
+      // добавляем созданный объект в список
+      contacts.add(new ContactData().withId(id).withFirstname(firstname).withLastname(lastname));
     }
     return contacts;
   }
