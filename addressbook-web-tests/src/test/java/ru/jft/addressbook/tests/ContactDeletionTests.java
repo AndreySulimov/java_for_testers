@@ -7,7 +7,6 @@ import ru.jft.addressbook.model.Contacts;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.testng.Assert.assertEquals;
 
 public class ContactDeletionTests extends TestBase {
 
@@ -16,7 +15,7 @@ public class ContactDeletionTests extends TestBase {
     // проверка существования хотя бы одного контакта: если список пустой, то контакт нужно создать
     if (app.contact().all().size() == 0) {
       app.contact().create(new ContactData()
-              .withFirstname("Андрей").withLastname("Сулимов").withAddress("Злынка").withTelephone("89001234567").withEmail("test@mail.ru").withGroup("Test2"), true);
+              .withFirstname("Андрей").withLastname("Сулимов").withAddress("Злынка").withHomePhone("89001234567").withEmail("test@mail.ru").withGroup("Test2"), true);
     }
   }
 

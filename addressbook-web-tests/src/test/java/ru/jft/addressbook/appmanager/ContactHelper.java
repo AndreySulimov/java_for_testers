@@ -26,8 +26,12 @@ public class ContactHelper extends HelperBase {
     type(By.name("firstname"), contactData.getFirstname());
     type(By.name("lastname"), contactData.getLastname());
     type(By.name("address"), contactData.getAddress());
-    type(By.name("mobile"), contactData.getTelephone());
+    type(By.name("home"), contactData.getHomePhone());
+    type(By.name("mobile"), contactData.getMobilePhone());
+    type(By.name("work"), contactData.getWorkPhone());
     type(By.name("email"), contactData.getEmail());
+    type(By.name("email2"), contactData.getEmail2());
+    type(By.name("email3"), contactData.getEmail3());
 
     if (creation) {
       new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactData.getGroup());
@@ -45,6 +49,32 @@ public class ContactHelper extends HelperBase {
     confirmDeletion();
   }
 
+  public ContactData infoFromEditForm(ContactData contact) {
+    initContactModificationById(contact.getId()); // выбираем контакт по идентификатору
+    String firstname = wd.findElement(By.name("firstname")).getAttribute("value");
+    String lastname = wd.findElement(By.name("lastname")).getAttribute("value");
+    String address = wd.findElement(By.name("address")).getAttribute("value");
+    String home = wd.findElement(By.name("home")).getAttribute("value");
+    String mobile = wd.findElement(By.name("mobile")).getAttribute("value");
+    String work = wd.findElement(By.name("work")).getAttribute("value");
+    String email = wd.findElement(By.name("email")).getAttribute("value");
+    String email2 = wd.findElement(By.name("email2")).getAttribute("value");
+    String email3 = wd.findElement(By.name("email3")).getAttribute("value");
+
+    wd.navigate().back();
+    return new ContactData()
+            .withId(contact.getId())
+            .withFirstname(firstname)
+            .withLastname(lastname)
+            .withAddress(address)
+            .withHomePhone(home)
+            .withMobilePhone(mobile)
+            .withWorkPhone(work)
+            .withEmail(email)
+            .withEmail2(email2)
+            .withEmail3(email3);
+  }
+
   private void initContactModificationById(int id) {
     wd.findElement(By.cssSelector("a[href='edit.php?id=" + id + "']")).click();
 
@@ -59,14 +89,14 @@ public class ContactHelper extends HelperBase {
     fillContactForm(contact, creation);
     submitContactCreation();
     contactCache = null;
-    app.goTo().returnToHomePage();
+    app.goTo().homePage();
   }
 
   public void delete(ContactData сontact) {
     selectContactById(сontact.getId());
     deleteSelectedContact();
     contactCache = null;
-    app.goTo().returnToHomePage();
+    app.goTo().homePage();
   }
 
   public void modify(ContactData contact) {
@@ -74,7 +104,7 @@ public class ContactHelper extends HelperBase {
     fillContactForm(contact, false);
     submitContactModification();
     contactCache = null;
-    app.goTo().returnToHomePage();
+    app.goTo().homePage();
   }
 
   public boolean isThereAContact() {
@@ -103,6 +133,9 @@ public class ContactHelper extends HelperBase {
 
       String firstname = cells.get(2).getText(); // извлекаем firstname из третьей ячейки
       String lastname = cells.get(1).getText(); // извлекаем lastname из второй ячейки
+      String address = cells.get(3).getText(); // извлекаем address из четвертой ячейки
+      String allPhones = cells.get(5).getText(); // извлекаем все телефоны (одновременно) из шестой ячейки
+      String allEmail = cells.get(4).getText(); // извлекаем все email (одновременно) из пятой ячейки
       // извлекаем id из первой ячейки
       // находим один элемент (value) внутри другого (input)
       // преобразуем строку в число (Integer.parseInt)
@@ -110,7 +143,13 @@ public class ContactHelper extends HelperBase {
 
       // создаем объект и передаем в конструктор в качестве параметров извлеченные выше значения
       // добавляем созданный объект в список
-      contactCache.add(new ContactData().withId(id).withFirstname(firstname).withLastname(lastname));
+      contactCache.add(new ContactData()
+              .withId(id)
+              .withFirstname(firstname)
+              .withLastname(lastname)
+              .withAddress(address)
+              .withAllPhones(allPhones)
+              .withAllEmail(allEmail));
     }
     return new Contacts(contactCache); // возвращаем копию кэша
   }
