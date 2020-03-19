@@ -1,18 +1,56 @@
 package ru.jft.addressbook.tests;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import ru.jft.addressbook.model.ContactData;
 import ru.jft.addressbook.model.Contacts;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ContactCreationTests extends TestBase {
 
+  @DataProvider // провайдер тестовых данных
+  public Iterator<Object[]> validContactsFromJson() throws IOException { // итератор массивов объектов
+    // читаем данные из файла (построчно)
+    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/contacts.json")));
+    String json = "";
+    String line = reader.readLine();
+    // читаем строки в цикле до тех пор, пока строки не кончатся
+    while (line != null) {
+      json += line;
+      line = reader.readLine();
+    }
+    Gson gson = new Gson();
+    List<ContactData> contacts = gson.fromJson(json, new TypeToken<List<ContactData>>() {
+    }.getType()); // List<ContactData>.class
+    return contacts.stream().map((c) -> new Object[]{c}).collect(Collectors.toList()).iterator();
+  }
+
+  @Test(dataProvider = "validContactsFromJson")
+  public void testContactCreation(ContactData contact) throws Exception {
+    Contacts before = app.contact().all(); // сохраняем список контактов до создания нового
+    app.goTo().contactPage(); // переходим на страницу добавления контактов
+    app.contact().create(contact, true); // создаем контакт с указанными параметрами
+    app.goTo().homePage(); // возвращаемся на главную страницу
+    assertThat(app.contact().count(), equalTo(before.size() + 1)); // сравниваем размеры списков
+    Contacts after = app.contact().all(); // сохраняем список контактов после создания нового
+    assertThat(after, equalTo(
+            before.withAdded(contact.withId(after.stream().mapToInt((c) -> c.getId()).max().getAsInt())))); // проверяем, что контакт создался
+  }
+
   @Test
-  public void testContactCreation() throws Exception {
+  public void testContactCreationWithPhoto() throws Exception {
     Contacts before = app.contact().all(); // сохраняем список контактов до создания нового
     app.goTo().contactPage(); // переходим на страницу добавления контактов
     File photo = new File("src/test/resources/logo.png"); // создаем локальную переменную photo и в качестве параметра передаем путь к файлу
@@ -33,7 +71,7 @@ public class ContactCreationTests extends TestBase {
             before.withAdded(contact.withId(after.stream().mapToInt((c) -> c.getId()).max().getAsInt())))); // проверяем, что контакт создался
   }
 
-  @Test (enabled = false)
+  @Test(enabled = false)
   public void testBadContactCreation() throws Exception { // негативный тест - недопустимый сивол в firstname
     Contacts before = app.contact().all();
     app.goTo().contactPage();

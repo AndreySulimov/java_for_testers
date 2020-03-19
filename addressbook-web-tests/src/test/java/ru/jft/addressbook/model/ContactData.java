@@ -1,19 +1,27 @@
 package ru.jft.addressbook.model;
 
+import com.google.gson.annotations.Expose;
+
 import java.io.File;
 import java.util.Objects;
 
 public class ContactData {
   // добавляем атрибут класса
   private int id = Integer.MAX_VALUE; // в id присваем Integer.MAX_VALUE, чтобы созданный контакт при сравнении оказался самым последним
+  @Expose // использовать поле при сериализации в json
   private String firstname;
+  @Expose
   private String lastname;
+  @Expose
   private String address;
+  @Expose
   private String email;
   private String email2;
   private String email3;
   private String allEmail;
+  @Expose
   private String group;
+  @Expose
   private String homePhone;
   private String mobilePhone;
   private String workPhone;
