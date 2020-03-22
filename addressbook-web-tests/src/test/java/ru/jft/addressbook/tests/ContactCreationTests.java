@@ -40,19 +40,19 @@ public class ContactCreationTests extends TestBase {
 
   @Test(dataProvider = "validContactsFromJson")
   public void testContactCreation(ContactData contact) throws Exception {
-    Contacts before = app.contact().all(); // сохраняем список контактов до создания нового
+    Contacts before = app.db().contacts(); // сохраняем список контактов до создания нового (из БД)
     app.goTo().contactPage(); // переходим на страницу добавления контактов
     app.contact().create(contact, true); // создаем контакт с указанными параметрами
     app.goTo().homePage(); // возвращаемся на главную страницу
     assertThat(app.contact().count(), equalTo(before.size() + 1)); // сравниваем размеры списков
-    Contacts after = app.contact().all(); // сохраняем список контактов после создания нового
+    Contacts after = app.db().contacts(); // сохраняем список контактов после создания нового (из БД)
     assertThat(after, equalTo(
             before.withAdded(contact.withId(after.stream().mapToInt((c) -> c.getId()).max().getAsInt())))); // проверяем, что контакт создался
   }
 
   @Test
   public void testContactCreationWithPhoto() throws Exception {
-    Contacts before = app.contact().all(); // сохраняем список контактов до создания нового
+    Contacts before = app.db().contacts(); // сохраняем список контактов до создания нового (из БД)
     app.goTo().contactPage(); // переходим на страницу добавления контактов
     File photo = new File("src/test/resources/logo.png"); // создаем локальную переменную photo и в качестве параметра передаем путь к файлу
     // создаем локальную переменную contact и передаем в конструктор значения
@@ -62,26 +62,31 @@ public class ContactCreationTests extends TestBase {
             .withAddress("Злынка")
             .withHomePhone("89001234567")
             .withEmail("test@mail.ru")
-            .withGroup("Test2")
+            .withGroup("test0")
             .withPhoto(photo);
     app.contact().create(contact, true); // создаем контакт с указанными параметрами
     app.goTo().homePage(); // возвращаемся на главную страницу
     assertThat(app.contact().count(), equalTo(before.size() + 1)); // сравниваем размеры списков
-    Contacts after = app.contact().all(); // сохраняем список контактов после создания нового
+    Contacts after = app.db().contacts(); // сохраняем список контактов после создания нового (из БД)
     assertThat(after, equalTo(
             before.withAdded(contact.withId(after.stream().mapToInt((c) -> c.getId()).max().getAsInt())))); // проверяем, что контакт создался
   }
 
-  @Test(enabled = false)
+  @Test
   public void testBadContactCreation() throws Exception { // негативный тест - недопустимый сивол в firstname
-    Contacts before = app.contact().all();
+    Contacts before = app.db().contacts();
     app.goTo().contactPage();
     ContactData contact = new ContactData()
-            .withFirstname("Андрей'").withLastname("Сулимов").withAddress("Злынка").withHomePhone("89001234567").withEmail("test@mail.ru").withGroup("Test2");
+            .withFirstname("Андрей'")
+            .withLastname("Сулимов")
+            .withAddress("Злынка")
+            .withHomePhone("89001234567")
+            .withEmail("test@mail.ru")
+            .withGroup("Test2");
     app.contact().create(contact, true);
     app.goTo().homePage();
     assertThat(app.contact().count(), equalTo(before.size()));
-    Contacts after = app.contact().all();
+    Contacts after = app.db().contacts();
     assertThat(after, equalTo(before)); // проверяем, что контакт не создался
   }
 

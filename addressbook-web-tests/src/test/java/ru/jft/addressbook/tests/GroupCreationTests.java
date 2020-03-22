@@ -53,10 +53,10 @@ public class GroupCreationTests extends TestBase {
   @Test(dataProvider = "validGroupsFromJson")
   public void testGroupCreation(GroupData group) throws Exception {
     app.goTo().groupPage();
-    Groups before = app.group().all();
+    Groups before = app.db().groups(); // получаем список групп до создания (из БД)
     app.group().create(group);
-    assertThat(app.group().count(), equalTo(before.size() + 1)); // хеширование
-    Groups after = app.group().all();
+    assertThat(app.group().count(), equalTo(before.size() + 1)); // хеширование (проверка того, что количество групп не изменилось)
+    Groups after = app.db().groups(); // получаем список групп после создания (из БД)
     assertThat(after, equalTo(
             before.withAdded(group.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt())))); // сравниваем множества before и after
   }
@@ -74,11 +74,11 @@ public class GroupCreationTests extends TestBase {
   @Test
   public void testBadGroupCreation() throws Exception { // негативный тест
     app.goTo().groupPage();
-    Groups before = app.group().all();
+    Groups before = app.db().groups();
     GroupData group = new GroupData().withName("Test2'"); // недопустимый сивол в названии группы
     app.group().create(group);
     assertThat(app.group().count(), equalTo(before.size()));
-    Groups after = app.group().all();
+    Groups after = app.db().groups();
     assertThat(after, equalTo(before));
   }
 }

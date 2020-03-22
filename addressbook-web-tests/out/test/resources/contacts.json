@@ -4,23 +4,7 @@
     "lastname": "Сулимов 0",
     "address": "г.Злынка д.0",
     "email": "test0@mail.ru",
-    "group": "Test2",
+    "group": "test0",
     "homePhone": "89001234560"
-  },
-  {
-    "firstname": "Андрей 1",
-    "lastname": "Сулимов 1",
-    "address": "г.Злынка д.1",
-    "email": "test1@mail.ru",
-    "group": "Test2",
-    "homePhone": "89001234561"
-  },
-  {
-    "firstname": "Андрей 2",
-    "lastname": "Сулимов 2",
-    "address": "г.Злынка д.2",
-    "email": "test2@mail.ru",
-    "group": "Test2",
-    "homePhone": "89001234562"
   }
 ]

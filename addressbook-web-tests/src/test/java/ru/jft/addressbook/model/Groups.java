@@ -2,6 +2,7 @@ package ru.jft.addressbook.model;
 
 import com.google.common.collect.ForwardingSet;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,7 +19,11 @@ public class Groups extends ForwardingSet<GroupData> {
   }
 
   public Groups() {
-    this.delegate = new HashSet<>();
+    this.delegate = new HashSet<GroupData>();
+  }
+
+  public Groups(Collection<GroupData> groups) {
+    this.delegate = new HashSet<GroupData>(groups); // строим множество объектов типа GroupData (HashSet) из коллекции
   }
 
   @Override

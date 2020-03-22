@@ -12,20 +12,21 @@ public class GroupDeletionTests extends TestBase {
 
   @BeforeMethod
   public void ensurePreconditions() {
-    app.goTo().groupPage();
     // проверка существования хотя бы одной группы: если список пустой, то группу нужно создать
-    if (app.group().all().size() == 0) {
+    if (app.db().groups().size() == 0) {
+      app.goTo().groupPage();
       app.group().create(new GroupData().withName("Test1"));
     }
   }
 
   @Test
   public void testGroupDeletion() throws Exception {
-    Groups before = app.group().all(); // запоминаем содержимое списка перед удалением
-    GroupData deletedGroup = before.iterator().next();
+    Groups before = app.db().groups(); // получаем список групп до удаления (из БД)
+    GroupData deletedGroup = before.iterator().next(); // выбираем группу из множества случайным образом
+    app.goTo().groupPage();
     app.group().delete(deletedGroup);
-    assertThat(app.group().count(), equalTo(before.size() - 1)); // хеширование
-    Groups after = app.group().all();
+    assertThat(app.group().count(), equalTo(before.size() - 1)); // хеширование (проверка того, что количество групп не изменилось)
+    Groups after = app.db().groups(); // получаем список групп после удаления (из БД)
     assertThat(after, equalTo(before.without(deletedGroup)));
   }
 }

@@ -65,7 +65,7 @@ public class ContactDataGenerator {
               .withAddress(String.format("г.Злынка д.%s", i))
               .withHomePhone(String.format("8900123456%s", i))
               .withEmail(String.format("test%s@mail.ru", i))
-              .withGroup("Test2"));
+              .withGroup("test0"));
     }
     return contacts; // возвращаем заполненный список
   }

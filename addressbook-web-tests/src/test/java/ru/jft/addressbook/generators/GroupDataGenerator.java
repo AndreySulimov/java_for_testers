@@ -83,7 +83,7 @@ public class GroupDataGenerator {
     // заполняем список заданным количеством групп
     for (int i = 0; i < count; i++) {
       groups.add(new GroupData()
-              .withName(String.format("test %s", i))
+              .withName(String.format("test%s", i))
               .withHeader(String.format("header %s", i))
               .withFooter(String.format("footer %s", i)));
     }
