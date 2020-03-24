@@ -2,10 +2,13 @@ package ru.jft.addressbook.tests;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import ru.jft.addressbook.model.ContactData;
 import ru.jft.addressbook.model.Contacts;
+import ru.jft.addressbook.model.GroupData;
+import ru.jft.addressbook.model.Groups;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,6 +41,15 @@ public class ContactCreationTests extends TestBase {
     }
   }
 
+  @BeforeMethod
+  public void ensurePreconditions() {
+    // проверка существования хотя бы одной группы: если список пустой, то группу нужно создать
+    if (app.db().groups().size() == 0) {
+      app.goTo().groupPage();
+      app.group().create(new GroupData().withName("Test1"));
+    }
+  }
+
   @Test(dataProvider = "validContactsFromJson")
   public void testContactCreation(ContactData contact) throws Exception {
     Contacts before = app.db().contacts(); // сохраняем список контактов до создания нового (из БД)
@@ -53,6 +65,7 @@ public class ContactCreationTests extends TestBase {
 
   @Test
   public void testContactCreationWithPhoto() throws Exception {
+    Groups groups = app.db().groups(); // получаем список групп (из БД)
     Contacts before = app.db().contacts(); // сохраняем список контактов до создания нового (из БД)
     app.goTo().contactPage(); // переходим на страницу добавления контактов
     File photo = new File("src/test/resources/logo.png"); // создаем локальную переменную photo и в качестве параметра передаем путь к файлу
@@ -63,8 +76,8 @@ public class ContactCreationTests extends TestBase {
             .withAddress("Злынка")
             .withHomePhone("89001234567")
             .withEmail("test@mail.ru")
-            .withGroup("test0")
-            .withPhoto(photo);
+            .withPhoto(photo)
+            .inGroup(groups.iterator().next()); // помещаем контакт в рандомную группу (из имеющихся)
     app.contact().create(contact, true); // создаем контакт с указанными параметрами
     app.goTo().homePage(); // возвращаемся на главную страницу
     assertThat(app.contact().count(), equalTo(before.size() + 1)); // сравниваем размеры списков
@@ -83,8 +96,7 @@ public class ContactCreationTests extends TestBase {
             .withLastname("Сулимов")
             .withAddress("Злынка")
             .withHomePhone("89001234567")
-            .withEmail("test@mail.ru")
-            .withGroup("Test2");
+            .withEmail("test@mail.ru");
     app.contact().create(contact, true);
     app.goTo().homePage();
     assertThat(app.contact().count(), equalTo(before.size()));

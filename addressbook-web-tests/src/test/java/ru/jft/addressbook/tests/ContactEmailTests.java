@@ -3,6 +3,7 @@ package ru.jft.addressbook.tests;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.jft.addressbook.model.ContactData;
+import ru.jft.addressbook.model.Groups;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ public class ContactEmailTests extends TestBase {
   public void ensurePreconditions() {
     // проверка существования хотя бы одного контакта: если список пустой, то контакт нужно создать
     if (app.contact().all().size() == 0) {
+      Groups groups = app.db().groups();
       app.contact().create(new ContactData()
               .withFirstname("Андрей")
               .withLastname("Сулимов")
@@ -26,7 +28,7 @@ public class ContactEmailTests extends TestBase {
               .withEmail("test@mail.ru")
               .withEmail2("test2@mail.ru")
               .withEmail3("test3@mail.ru")
-              .withGroup("Test2"), true);
+              .inGroup(groups.iterator().next()), true);
     }
   }
 

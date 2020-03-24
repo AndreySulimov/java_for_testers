@@ -22,8 +22,7 @@ public class ContactAddressTests extends TestBase {
               .withWorkPhone("8-900-123-45-67")
               .withEmail("test@mail.ru")
               .withEmail2("test2@mail.ru")
-              .withEmail3("test3@mail.ru")
-              .withGroup("test0"), true);
+              .withEmail3("test3@mail.ru"), true);
     }
   }
 

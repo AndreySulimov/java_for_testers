@@ -60,12 +60,11 @@ public class ContactDataGenerator {
     // заполняем список заданным количеством контактов
     for (int i = 0; i < count; i++) {
       contacts.add(new ContactData()
-              .withFirstname(String.format("Андрей %s", i))
-              .withLastname(String.format("Сулимов %s", i))
-              .withAddress(String.format("г.Злынка д.%s", i))
+              .withFirstname(String.format("Андрей%s", i))
+              .withLastname(String.format("Сулимов%s", i))
+              .withAddress(String.format("г.Злынка, д.%s", i))
               .withHomePhone(String.format("8900123456%s", i))
-              .withEmail(String.format("test%s@mail.ru", i))
-              .withGroup("test0"));
+              .withEmail(String.format("test%s@mail.ru", i)));
     }
     return contacts; // возвращаем заполненный список
   }

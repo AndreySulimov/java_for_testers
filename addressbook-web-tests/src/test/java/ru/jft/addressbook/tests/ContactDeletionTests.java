@@ -4,6 +4,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.jft.addressbook.model.ContactData;
 import ru.jft.addressbook.model.Contacts;
+import ru.jft.addressbook.model.GroupData;
+import ru.jft.addressbook.model.Groups;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -11,16 +13,26 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ContactDeletionTests extends TestBase {
 
   @BeforeMethod
-  public void ensurePreconditions() {
+  public void ensurePreconditionsContacts() {
     // проверка существования хотя бы одного контакта: если список пустой, то контакт нужно создать
     if (app.db().contacts().size() == 0) {
+      Groups groups = app.db().groups(); // получаем список групп (из БД)
       app.contact().create(new ContactData()
               .withFirstname("Андрей")
               .withLastname("Сулимов")
               .withAddress("Злынка")
               .withHomePhone("89001234567")
               .withEmail("test@mail.ru")
-              .withGroup("test0"), true);
+              .inGroup(groups.iterator().next()), true);
+    }
+  }
+
+  @BeforeMethod
+  public void ensurePreconditionsGroups() {
+    // проверка существования хотя бы одной группы: если список пустой, то группу нужно создать
+    if (app.db().groups().size() == 0) {
+      app.goTo().groupPage();
+      app.group().create(new GroupData().withName("Test1"));
     }
   }
 

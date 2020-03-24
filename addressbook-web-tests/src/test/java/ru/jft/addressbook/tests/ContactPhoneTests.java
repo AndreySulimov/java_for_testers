@@ -3,6 +3,7 @@ package ru.jft.addressbook.tests;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.jft.addressbook.model.ContactData;
+import ru.jft.addressbook.model.Groups;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -12,35 +13,36 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ContactPhoneTests extends TestBase {
 
-    @BeforeMethod
-    public void ensurePreconditions() {
-        // проверка существования хотя бы одного контакта: если список пустой, то контакт нужно создать
-        if (app.contact().all().size() == 0) {
-            app.contact().create(new ContactData()
-                    .withFirstname("Андрей")
-                    .withLastname("Сулимов")
-                    .withAddress("Злынка")
-                    .withHomePhone("89001234567")
-                    .withMobilePhone("+7(900)1234567")
-                    .withWorkPhone("8-900-123-45-67")
-                    .withEmail("test@mail.ru")
-                    .withEmail2("test2@mail.ru")
-                    .withEmail3("test3@mail.ru")
-                    .withGroup("Test2"), true);
-        }
+  @BeforeMethod
+  public void ensurePreconditions() {
+    // проверка существования хотя бы одного контакта: если список пустой, то контакт нужно создать
+    if (app.contact().all().size() == 0) {
+      Groups groups = app.db().groups();
+      app.contact().create(new ContactData()
+              .withFirstname("Андрей")
+              .withLastname("Сулимов")
+              .withAddress("Злынка")
+              .withHomePhone("89001234567")
+              .withMobilePhone("+7(900)1234567")
+              .withWorkPhone("8-900-123-45-67")
+              .withEmail("test@mail.ru")
+              .withEmail2("test2@mail.ru")
+              .withEmail3("test3@mail.ru")
+              .inGroup(groups.iterator().next()), true);
     }
+  }
 
-    @Test
-    public void testContactPhones() {
-        app.goTo().homePage();
-        ContactData contact = app.contact().all().iterator().next(); // загружаем множество контактов и выбираем рандомный контакт
-        ContactData contactInfoFromEditForm = app.contact().infoFromEditForm(contact); // загружаем информацию о контакте из формы редактирования
+  @Test
+  public void testContactPhones() {
+    app.goTo().homePage();
+    ContactData contact = app.contact().all().iterator().next(); // загружаем множество контактов и выбираем рандомный контакт
+    ContactData contactInfoFromEditForm = app.contact().infoFromEditForm(contact); // загружаем информацию о контакте из формы редактирования
 
-        // сравниваем номера телефонов на главной странице и на странице редактирования контакта
-        assertThat(contact.getAllPhones(), equalTo(mergePhones(contactInfoFromEditForm)));
-    }
+    // сравниваем номера телефонов на главной странице и на странице редактирования контакта
+    assertThat(contact.getAllPhones(), equalTo(mergePhones(contactInfoFromEditForm)));
+  }
 
-    private String mergePhones(ContactData contact) {
+  private String mergePhones(ContactData contact) {
         /* формируем коллекцию (Arrays.asList) из телефонов, которые будем склеивать,
         из этого списка отсеиваем элементы равные null, а остальные будем склеивать.
         Для этого превращаем список в поток (stream()) и отфильтровываем получившийся поток от пустых строк,
@@ -56,14 +58,14 @@ public class ContactPhoneTests extends TestBase {
         В качестве параметра коллектор принимает разделить ("\n") - строку, вставляющуюся между склеиваемыми фрагментами.
         Результатом выполнения функции collect является строка, и именно ее нужно вернуть в качестве результата. */
 
-        return Arrays.asList(contact.getHomePhone(), contact.getMobilePhone(), contact.getWorkPhone())
-                .stream().filter((s) -> !s.equals(""))
-                .map(ContactPhoneTests::cleaned)
-                .collect(Collectors.joining("\n"));
-    }
+    return Arrays.asList(contact.getHomePhone(), contact.getMobilePhone(), contact.getWorkPhone())
+            .stream().filter((s) -> !s.equals(""))
+            .map(ContactPhoneTests::cleaned)
+            .collect(Collectors.joining("\n"));
+  }
 
-    // функция для приведения номера телефона к очищенному виду
-    public static String cleaned(String phone) {
-        return phone.replaceAll("\\s", "").replaceAll("[-()]", "");
-    }
+  // функция для приведения номера телефона к очищенному виду
+  public static String cleaned(String phone) {
+    return phone.replaceAll("\\s", "").replaceAll("[-()]", "");
+  }
 }

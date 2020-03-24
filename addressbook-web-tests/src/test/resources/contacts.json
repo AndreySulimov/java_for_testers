@@ -1,10 +1,9 @@
 [
   {
-    "firstname": "Андрей 0",
-    "lastname": "Сулимов 0",
-    "address": "г.Злынка д.0",
+    "firstname": "Андрей0",
+    "lastname": "Сулимов0",
+    "address": "г.Злынка, д.0",
     "email": "test0@mail.ru",
-    "group": "test0",
     "homePhone": "89001234560"
   }
 ]

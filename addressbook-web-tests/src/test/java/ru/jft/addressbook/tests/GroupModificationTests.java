@@ -24,7 +24,7 @@ public class GroupModificationTests extends TestBase {
     Groups before = app.db().groups(); // получаем список групп до модификации (из БД)
     GroupData modifiedGroup = before.iterator().next(); // выбираем группу из множества случайным образом
     GroupData group = new GroupData()
-            .withId(modifiedGroup.getId()).withName("Test2").withHeader("Test2").withFooter("Test2");
+            .withId(modifiedGroup.getId()).withName("Test1").withHeader("Test2").withFooter("Test3");
     app.goTo().groupPage();
     app.group().modify(group);
     assertThat(app.group().count(), equalTo(before.size())); // хеширование (проверка того, что количество групп не изменилось)

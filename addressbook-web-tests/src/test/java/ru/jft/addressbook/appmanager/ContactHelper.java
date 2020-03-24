@@ -34,12 +34,18 @@ public class ContactHelper extends HelperBase {
     type(By.name("email3"), contactData.getEmail3());
     attach(By.name("photo"), contactData.getPhoto());
 
-    /* если запущен тест для создания контакта (creation = true), то настранице должен быть выпадающеий список Group
+    /* если запущен тест для создания контакта (creation = true), то на странице должен быть выпадающий список Group
     (список для выбора группы, к которой будет относиться созданный контакт) и в нем нужно выбрать какой-то вариант.
+    Если существует хотя бы одна группа, то нужно добавить контакт в группу. Если указана одна группа, то пытаемся ее выбрать.
+    Если указано групп больше, чем одна, то это недопустимая ситуация.
+    Затем выбираем из выпадающего списка рандомную группу.
     Если же запущен тест для модификации контакта (creation = false), то выпадающего списка на странице быть не должно,
     что и проверяется в блоке else.*/
     if (creation) {
-      new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactData.getGroup());
+      if (contactData.getGroups().size() > 0) {
+        Assert.assertTrue(contactData.getGroups().size() == 1);
+        new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactData.getGroups().iterator().next().getName());
+      }
     } else {
       Assert.assertFalse(isElementPresent(By.name("new_group")));
     }
