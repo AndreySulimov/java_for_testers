@@ -30,5 +30,6 @@ public class GroupModificationTests extends TestBase {
     assertThat(app.group().count(), equalTo(before.size())); // хеширование (проверка того, что количество групп не изменилось)
     Groups after = app.db().groups(); // получаем список групп после модификации (из БД)
     assertThat(after, equalTo(before.without(modifiedGroup).withAdded(group)));
+    verifyGroupListInUI(); // сравниваем между собой списки групп из БД и пользовательского интерфейса
   }
 }

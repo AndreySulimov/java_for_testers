@@ -41,5 +41,6 @@ public class ContactModificationTests extends TestBase {
     assertThat(app.contact().count(), equalTo(before.size())); // проверяем равенство размеров списков
     Contacts after = app.db().contacts(); // сохраняем список контактов (из БД) после модификации
     assertThat(after, equalTo(before.without(modifiedContact).withAdded(contact))); // проверяем, что контакт модифицировался
+    verifyContactListInUI(); // сравниваем между собой списки контактов из БД и пользовательского интерфейса
   }
 }

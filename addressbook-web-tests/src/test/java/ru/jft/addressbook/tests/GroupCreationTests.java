@@ -59,6 +59,7 @@ public class GroupCreationTests extends TestBase {
     Groups after = app.db().groups(); // получаем список групп после создания (из БД)
     assertThat(after, equalTo(
             before.withAdded(group.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt())))); // сравниваем множества before и after
+    verifyGroupListInUI(); // сравниваем между собой списки групп из БД и пользовательского интерфейса
   }
 
     /*вычисляем максимальный идентификатор:
@@ -80,5 +81,6 @@ public class GroupCreationTests extends TestBase {
     assertThat(app.group().count(), equalTo(before.size()));
     Groups after = app.db().groups();
     assertThat(after, equalTo(before));
+    verifyGroupListInUI(); // сравниваем между собой списки групп из БД и пользовательского интерфейса
   }
 }

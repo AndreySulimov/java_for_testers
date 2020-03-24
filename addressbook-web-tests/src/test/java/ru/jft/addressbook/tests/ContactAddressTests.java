@@ -35,5 +35,6 @@ public class ContactAddressTests extends TestBase {
 
     // сравниваем адреса на главной странице и на странице редактирования контакта
     assertThat(contact.getAddress(), equalTo(contactInfoFromEditForm.getAddress()));
+    verifyContactListInUI(); // сравниваем между собой списки контактов из БД и пользовательского интерфейса
   }
 }

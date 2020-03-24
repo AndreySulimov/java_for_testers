@@ -48,6 +48,7 @@ public class ContactCreationTests extends TestBase {
     Contacts after = app.db().contacts(); // сохраняем список контактов после создания нового (из БД)
     assertThat(after, equalTo(
             before.withAdded(contact.withId(after.stream().mapToInt((c) -> c.getId()).max().getAsInt())))); // проверяем, что контакт создался
+    verifyContactListInUI(); // сравниваем между собой списки контактов из БД и пользовательского интерфейса
   }
 
   @Test
@@ -70,6 +71,7 @@ public class ContactCreationTests extends TestBase {
     Contacts after = app.db().contacts(); // сохраняем список контактов после создания нового (из БД)
     assertThat(after, equalTo(
             before.withAdded(contact.withId(after.stream().mapToInt((c) -> c.getId()).max().getAsInt())))); // проверяем, что контакт создался
+    verifyContactListInUI(); // сравниваем между собой списки контактов из БД и пользовательского интерфейса
   }
 
   @Test
@@ -88,6 +90,7 @@ public class ContactCreationTests extends TestBase {
     assertThat(app.contact().count(), equalTo(before.size()));
     Contacts after = app.db().contacts();
     assertThat(after, equalTo(before)); // проверяем, что контакт не создался
+    verifyContactListInUI(); // сравниваем между собой списки контактов из БД и пользовательского интерфейса
   }
 
   /*
