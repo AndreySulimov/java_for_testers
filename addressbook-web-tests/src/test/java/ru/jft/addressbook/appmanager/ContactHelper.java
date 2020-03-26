@@ -60,6 +60,26 @@ public class ContactHelper extends HelperBase {
     confirmDeletion();
   }
 
+  // метод для добавления контакта в группу
+  public void addToGroup(int id) {
+    wd.findElement(By.name("to_group")).click();
+    new Select(wd.findElement(By.name("to_group")));
+    wd.findElement(By.cssSelector("select[name=\"to_group\"] > option[value='" + id + "']")).click();
+    click(By.name("add"));
+  }
+
+  // метод для выбора группы из выпадающего списка
+  public void selectGroupToDelete(int id) {
+    wd.findElement(By.name("group")).click();
+    new Select(wd.findElement(By.name("group")));
+    wd.findElement(By.cssSelector("option[value='" + id + "']")).click();
+  }
+
+  // метод для удаления контакта из группы
+  public void deleteFromGroup() {
+    click(By.name("remove"));
+  }
+
   public ContactData infoFromEditForm(ContactData contact) {
     initContactModificationById(contact.getId()); // выбираем контакт по идентификатору
     String firstname = wd.findElement(By.name("firstname")).getAttribute("value");
