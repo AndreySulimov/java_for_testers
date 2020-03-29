@@ -63,9 +63,18 @@ public class DeletingContactFromGroupTest extends TestBase {
     Groups groupsIncludeContactAfter = mostActualContact.withId(id).getGroups(); // получаем список групп, в которые входит контакт
     System.out.println("Группы, в которые добавлен выбранный контакт после удаления" + groupsIncludeContactAfter);
 
-    /* сравниваем размер списка групп, в которых состоял контакт до добавления в новую группу,
-    с размером списка групп, в которых контакт состоит после добавления в новую группу */
+    /* сравниваем размер списка групп, в которых состоял контакт до удаления из группы,
+    с размером списка групп, в которых контакт состоит после удаления из группы */
 
     assertThat(groupsIncludeContactAfter.size(), equalTo(actualGroupsIncludeContactBefore.size() - 1));
+
+    /* сравниваем содержимое списка групп, в которых состоит контакт после удаление из группы,
+    с содержимым списка групп, в которых контакт состоял до удаления из группы,
+    с исключением из этого списка той группы, из которой контакт был удален */
+
+    Groups removedGroup = app.db().groups(); // получаем список всех групп (из БД)
+    removedGroup.removeAll(groupsIncludeContactAfter); // удаляем из списка всех групп те, в которых контакт состоит после удаления из группы
+    System.out.println("Группа, из которой удален контакт" + removedGroup);
+    assertThat(groupsIncludeContactAfter, equalTo(actualGroupsIncludeContactBefore.without(removedGroup.iterator().next())));
   }
 }

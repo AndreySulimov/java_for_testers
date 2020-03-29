@@ -60,5 +60,11 @@ public class AddingContactToGroupTest extends TestBase {
     с размером списка групп, в которых контакт состоит после добавления в новую группу */
 
     assertThat(groupsIncludeContactAfter.size(), equalTo(groupsIncludeContactBefore.size() + 1));
+
+    /* сравниваем содержимое списка групп, в которых состоит контакт после добавления в новую группу,
+    с содержимым списка групп, в которых контакт состоял до добавления в новую группу,
+    с добавлением в этот список новой группы */
+
+    assertThat(groupsIncludeContactAfter, equalTo(groupsIncludeContactBefore.withAdded(actualAllGroups.iterator().next())));
   }
 }
