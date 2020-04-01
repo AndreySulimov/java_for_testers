@@ -8,7 +8,7 @@ public class RegistrationHelper {
 
   public RegistrationHelper(ApplicationManager app) {
     this.app = app;
-    wd = app.getDriver();
+    wd = app.getDriver(); // ленивая инициализация драйвера: драйвер инициализируется при первом обращении к методу getDriver()
   }
 
   public void start(String username, String email) {

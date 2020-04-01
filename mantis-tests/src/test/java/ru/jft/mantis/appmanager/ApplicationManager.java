@@ -18,6 +18,7 @@ public class ApplicationManager {
   private final Properties properties;
   private String browser;
   private RegistrationHelper registrationHelper;
+  private FtpHelper ftp;
 
   public ApplicationManager(String browser) {
     this.browser = browser;
@@ -43,11 +44,24 @@ public class ApplicationManager {
     return properties.getProperty(key);
   }
 
+  /* Ленивая инициализация помощников: если помощник еще не инициализирован,
+  то менеджер его инициализирует, а если он уже готов (или если инициализация прошла успешно),
+  то возвращается то, что получилось в результате инициализации */
+
   public RegistrationHelper registration() {
     if (registrationHelper == null) {
+      /* создаем объект типа RegistrationHelper и передаем в него в качестве параметра ссылка на ApplicationManager:
+      "менеджер нанимает помощника и передает в него ссылку на самого себя" */
       registrationHelper = new RegistrationHelper(this);
     }
     return registrationHelper;
+  }
+
+  public FtpHelper ftp() {
+    if (ftp == null) {
+      ftp = new FtpHelper(this);
+    }
+    return ftp;
   }
 
   public WebDriver getDriver() {
