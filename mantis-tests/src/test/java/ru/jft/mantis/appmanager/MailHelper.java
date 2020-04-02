@@ -54,8 +54,8 @@ public class MailHelper {
   public static MailMessage toModelMail(WiserMessage m) {
     try {
       MimeMessage mm = m.getMimeMessage(); // берем реальный объект (письмо в первоначальном формате)
-      // 1. берем список получателей и оставляем первого из них (т.к. известно, что получатель всего один)
-      // 2. преобразуем письмо (т.к. оно содержит только текст) в строку и отпарвляем в объект MailMessage
+      // 1. берем список адресов получателей и оставляем первого из них (т.к. известно, что получатель всего один)
+      // 2. преобразуем письмо (т.к. оно содержит только текст) в строку и отправляем в объект MailMessage
       return new MailMessage(mm.getAllRecipients()[0].toString(), (String) mm.getContent());
     } catch (MessagingException e) {
       e.printStackTrace();

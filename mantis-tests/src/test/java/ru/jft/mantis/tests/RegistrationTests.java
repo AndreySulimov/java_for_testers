@@ -15,7 +15,7 @@ import static org.testng.Assert.assertTrue;
 // тестовый класс наследуется от TestBase, чтобы иеть возможность получить ссылку на ApplicationManager
 public class RegistrationTests extends TestBase {
 
-  @BeforeMethod
+  //@BeforeMethod
   public void startMailServer() {
     app.mail().start();
   }
@@ -25,10 +25,13 @@ public class RegistrationTests extends TestBase {
     long now = System.currentTimeMillis(); // запоминаем текущее время (в миллисекундах) в качестве уникального идентификатора
     String username = String.format("user%s", now);
     String password = "password";
-    String email = String.format("user%s@localhost.localdomain", now);
+    String email = String.format("user%s@localhost", now);
+    app.james().createUser(username, password); // создаем пользователя на почтовом сервере
     app.registration().start(username, email);
-    // ждем 2 письма (1 админу, 1 пользователю) в течение 10 секунд и сохраняе их в список (mailMessages)
-    List<MailMessage> mailMessages = app.mail().waitForMail(2, 10000);
+    // ждем 2 письма (1 админу, 1 пользователю) на встроенном почтовом серверев течение 10 секунд и сохраняем их в список (mailMessages)
+    //List<MailMessage> mailMessages = app.mail().waitForMail(2, 10000);
+    // ждем письмо на внешнем почтовом сервере в течение 60 секунд и и сохраняем их в список (mailMessages)
+    List<MailMessage> mailMessages = app.james().waitForMail(username, password, 60000);
     // среди всех писем находим то, которое отправлено на email пользователя, и извлекаем из него ссылку
     String confirmationLink = findConfirmationLink(mailMessages, email);
     app.registration().finish(confirmationLink, username, password); // завершаем регистрацию
@@ -54,7 +57,7 @@ public class RegistrationTests extends TestBase {
     return regex.getText(mailMessage.text);
   }
 
-  @AfterMethod(alwaysRun = true)
+  //@AfterMethod(alwaysRun = true)
   public void stopMailServer() {
     app.mail().stop();
   }
