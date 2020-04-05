@@ -15,12 +15,15 @@ import java.util.concurrent.TimeUnit;
 public class ApplicationManager {
 
   private WebDriver wd;
-  private final Properties properties;
   private String browser;
+  private final Properties properties;
+  private SessionHelper sessionHelper;
+  private NavigationHelper navigationHelper;
   private RegistrationHelper registrationHelper;
   private FtpHelper ftp;
   private MailHelper mailHelper;
   private JamesHelper jamesHelper;
+  private UserHelper userHelper;
 
   public ApplicationManager(String browser) {
     this.browser = browser;
@@ -30,12 +33,20 @@ public class ApplicationManager {
   public void init() throws IOException {
     String target = System.getProperty("target", "local");
     properties.load(new FileReader(new File(String.format("src/test/resources/%s.properties", target)))); // загружаем свойства
+
+    sessionHelper = new SessionHelper(this);
+    navigationHelper = new NavigationHelper(this);
+    sessionHelper.login(properties.getProperty("web.adminLogin"), properties.getProperty("web.adminPassword"));
   }
 
   public void stop() {
     if (wd != null) {
       wd.quit();
     }
+  }
+
+  public NavigationHelper goTo() {
+    return navigationHelper;
   }
 
   public HttpSession newSession() {
@@ -52,7 +63,7 @@ public class ApplicationManager {
 
   public RegistrationHelper registration() {
     if (registrationHelper == null) {
-      /* создаем объект типа RegistrationHelper и передаем в него в качестве параметра ссылка на ApplicationManager:
+      /* создаем объект типа RegistrationHelper и передаем в него в качестве параметра ссылку на ApplicationManager:
       "менеджер нанимает помощника и передает в него ссылку на самого себя" */
       registrationHelper = new RegistrationHelper(this);
     }
@@ -94,5 +105,12 @@ public class ApplicationManager {
       jamesHelper = new JamesHelper(this);
     }
     return jamesHelper;
+  }
+
+  public UserHelper user() {
+    if (userHelper == null) {
+      userHelper = new UserHelper(this);
+    }
+    return userHelper;
   }
 }
