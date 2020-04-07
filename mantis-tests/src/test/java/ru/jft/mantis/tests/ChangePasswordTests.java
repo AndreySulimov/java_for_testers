@@ -24,9 +24,11 @@ public class ChangePasswordTests extends TestBase {
   public void testChangePassword() throws IOException, MessagingException {
     // переходим на страницу управления пользователями
     app.goTo().userManagePage();
-    // получаем список всех пользователей, находим среди них заданного (по имени)
-    UserData user = app.user().all().iterator().next().withName("user1585857495790");
-    app.user().selectByName(user.getName()); // переходим в карточку заданного пользователя
+
+    /* получаем список всех пользователей (за исключением администратора)
+    и выбираем одного из них (рандомно) */
+    UserData user = app.user().all().iterator().next();
+    app.user().selectByName(user.getName()); // переходим в карточку выбранного пользователя
     app.user().resetPassword(); // и сбрасываем его пароль
 
     // задаем значения имени, пароля и email пользователя

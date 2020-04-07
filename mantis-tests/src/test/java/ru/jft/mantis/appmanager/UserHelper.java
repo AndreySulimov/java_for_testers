@@ -33,7 +33,7 @@ public class UserHelper extends HelperBase {
 
   private Users userCache = null; // поле для кэша
 
-  // метод для получения списка всех пользователей
+  // метод для получения списка всех пользователей (за исключением администратора)
   public Users all() {
 
     /* если кэш не пустой (не равен null),
@@ -52,6 +52,10 @@ public class UserHelper extends HelperBase {
 
       String name = cells.get(1).getText(); // извлекаем name из второй ячейки
       String email = cells.get(2).getText(); // извлекаем email из третьей ячейки
+
+      /* если email пользователя совпадает с email администратора, то переходим к следующей итерации цикла
+      (к следующей строке таблицы) */
+      if (email.equals("root@localhost")) continue;
 
       // создаем объект и передаем в конструктор в качестве параметров извлеченные выше значения
       // добавляем созданный объект в список
