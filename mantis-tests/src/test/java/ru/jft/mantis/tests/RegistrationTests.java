@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.testng.Assert.assertTrue;
 
-// тестовый класс наследуется от TestBase, чтобы иеть возможность получить ссылку на ApplicationManager
+// тестовый класс наследуется от TestBase, чтобы иметь возможность получить ссылку на ApplicationManager
 public class RegistrationTests extends TestBase {
 
   //@BeforeMethod
@@ -30,6 +30,7 @@ public class RegistrationTests extends TestBase {
     app.registration().start(username, email);
     // ждем 2 письма (1 админу, 1 пользователю) на встроенном почтовом серверев течение 10 секунд и сохраняем их в список (mailMessages)
     //List<MailMessage> mailMessages = app.mail().waitForMail(2, 10000);
+
     // ждем письмо на внешнем почтовом сервере в течение 60 секунд и и сохраняем их в список (mailMessages)
     List<MailMessage> mailMessages = app.james().waitForMail(username, password, 60000);
     // среди всех писем находим то, которое отправлено на email пользователя, и извлекаем из него ссылку
