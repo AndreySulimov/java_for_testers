@@ -33,7 +33,7 @@ public class SoapHelper {
   }
 
   // метод для установки соединения с баг-трекером
-  private MantisConnectPortType getMantisConnect() throws ServiceException, MalformedURLException {
+  public MantisConnectPortType getMantisConnect() throws ServiceException, MalformedURLException {
     return new MantisConnectLocator()
             .getMantisConnectPort(new URL(app.getProperty("web.connectUrl")+ "/mantisconnect.php"));
   }
