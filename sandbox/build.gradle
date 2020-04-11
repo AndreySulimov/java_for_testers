@@ -1,6 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'application'
-mainClassName = "MyFirstProgram"
+mainClassName = "ru.jft.sandbox.MyFirstProgram"
 
 repositories {
     mavenCentral()
@@ -8,4 +8,8 @@ repositories {
 
 dependencies {
     implementation 'org.testng:testng:7.1.0'
+}
+
+test {
+    useTestNG()
 }
