@@ -13,7 +13,7 @@ import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
 
-public class RestAssuredTests {
+public class RestAssuredTests extends TestBase {
 
   @BeforeClass
   public void init() {
@@ -22,6 +22,7 @@ public class RestAssuredTests {
 
   @Test
   public void testCreateIssue() throws IOException {
+    skipIfNotFixed(2806);
     Set<Issue> oldIssues = getIssues(); // получаем множество объектов типа Issue (список багов до добавления нового)
     // формируем новый объект типа Issue (баг)
     Issue newIssue = new Issue().withSubject("Test issue").withDescription("New test issue");
@@ -31,7 +32,8 @@ public class RestAssuredTests {
     // выводим на экран информацию о созданном баге
     System.out.println("Created issue with Subject: "
             + "'" + newIssue.getSubject() + "'"
-            + " and with Description: " + "'" + newIssue.getDescription() + "'");
+            + " and with Description: " + "'" + newIssue.getDescription() + "'"
+            + " and with Id: " + "'" + newIssue.getId() + "'");
     assertEquals(newIssues, oldIssues); // сравниваем списки
   }
 
